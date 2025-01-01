@@ -84,5 +84,18 @@ export default {
     baseURL: 'http://localhost:8090/api',
   },
 
-  compatibilityDate: '2024-11-02'
+  compatibilityDate: '2024-11-02',
+
+
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'product',
+        path: '/product/:id',
+        component: resolve(__dirname, 'pages/product/_id.vue'),
+      });
+    },
+  },
+
+
 };
