@@ -1,5 +1,6 @@
 package Laboratorio1BdaGrupo5.BackendLab1.service;
 
+import Laboratorio1BdaGrupo5.BackendLab1.models.Interaccion;
 import Laboratorio1BdaGrupo5.BackendLab1.models.Opinion;
 import Laboratorio1BdaGrupo5.BackendLab1.models.Producto;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.OpinionRepository;
@@ -15,10 +16,14 @@ import java.util.List;
 public class OpinionService {
     @Autowired
     OpinionRepository opinionRepository;
+    @Autowired
+    HistorialService historialService;
 
 
 
     public Opinion saveReview(Opinion review) {
+        Interaccion interaccion = new Interaccion("Review", "Contenido: " + review.toString());
+        historialService.addInteraccion(review.getId_usuario(), interaccion);
         return opinionRepository.save(review);
     }
 
