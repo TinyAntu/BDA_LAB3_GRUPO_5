@@ -1,12 +1,16 @@
 package Laboratorio1BdaGrupo5.BackendLab1.service;
 
 import Laboratorio1BdaGrupo5.BackendLab1.models.DetalleOrden;
+import Laboratorio1BdaGrupo5.BackendLab1.models.Interaccion;
 import Laboratorio1BdaGrupo5.BackendLab1.models.Orden;
 import Laboratorio1BdaGrupo5.BackendLab1.models.Producto;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.OrdenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -19,6 +23,8 @@ public class OrdenService {
     private DetalleOrdenService detalleOrdenService;
 
     @Autowired ProductoService productoService;
+    @Autowired
+    HistorialService historialService;
     
     public List<Orden> getAllOrdenes(int limit, int offset) {
         try {
@@ -79,7 +85,7 @@ public class OrdenService {
         try{
             double total = 0;
             for (DetalleOrden detalle : detalles) {
-                Producto p = productoService.getProductoById(detalle.getIdProducto());
+                Producto p = productoService.getProductoById(detalle.getIdProducto(), -1);
                 detalle.setPrecioUnitario(BigDecimal.valueOf(p.getPrecio()));
                 total += p.getPrecio() * detalle.getCantidad();
             }
@@ -89,6 +95,8 @@ public class OrdenService {
                 detalle.setIdOrden(orden.getId_orden());
                 detalleOrdenService.createDetalleOrden(detalle, orden.getId_cliente());
             }
+            Interaccion interaccion = new Interaccion("Pago", "Orden:" + orden.toString());
+            historialService.addInteraccion(orden.getId_cliente(), interaccion);
         } catch (Exception e){
             throw new RuntimeException("Error al pagar la orden", e);
         }

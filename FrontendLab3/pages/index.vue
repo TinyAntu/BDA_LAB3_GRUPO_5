@@ -94,7 +94,7 @@ const fetchProducts = async () => {
   const offset = (currentPage.value - 1) * limit;
 
   try {
-    const response = await axios.get(`${API_URL}/producto`, {
+    const response = await axios.get(`${API_URL}/producto/search/${localStorage.getItem("userId")}`, {
       params: {
         limit: limit,
         offset: offset,
@@ -128,7 +128,7 @@ const filterByCategory = async () => {
 
   try {
     const response = await axios.get(
-      `${API_URL}/producto/getByCategoria/${selectedCategory.value}`
+      `${API_URL}/producto/getByCategoria/${selectedCategory.value}/${localStorage.getItem("userId")}`
     );
     products.value = response.data; // Actualiza los productos con los filtrados
     totalPages.value = 1; // Reinicia la paginación

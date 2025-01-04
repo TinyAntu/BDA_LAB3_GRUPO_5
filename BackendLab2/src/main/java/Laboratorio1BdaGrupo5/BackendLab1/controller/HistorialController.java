@@ -1,6 +1,7 @@
 package Laboratorio1BdaGrupo5.BackendLab1.controller;
 
 import Laboratorio1BdaGrupo5.BackendLab1.models.Historial;
+import Laboratorio1BdaGrupo5.BackendLab1.models.Interaccion;
 import Laboratorio1BdaGrupo5.BackendLab1.service.HistorialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,4 +31,10 @@ public class HistorialController {
         Historial historial  = historialService.aggregateOrden_Producto(id_Cliente, id_Orden);
         return ResponseEntity.ok(historial);
     }
+    @PostMapping("addInteraction/{id_cliente}")
+    public Historial agregarInteraccion(@PathVariable Integer id_cliente,@RequestBody Interaccion interaccion) {
+        return historialService.addInteraccion(id_cliente, interaccion);
+    }
+
+
 }

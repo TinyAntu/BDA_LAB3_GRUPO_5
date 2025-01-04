@@ -21,14 +21,14 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
-    @GetMapping
+    @GetMapping("/search/{id_cliente}")
     public ResponseEntity<Map<String, Object>> getAllProductos(
+            @PathVariable Integer id_cliente,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "") String search) {
         try {
-            System.out.println("Hola mundo");
-            List<Producto> productos = productoService.getAllProductos(limit, offset, search);
+            List<Producto> productos = productoService.getAllProductos(id_cliente, limit, offset, search);
             long totalCount = productoService.getTotalCount(); // Obtén el total de productos
             if (!search.isEmpty()) {
                 totalCount = productos.size();
@@ -43,10 +43,10 @@ public class ProductoController {
     }
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> getProductoById(@PathVariable Integer id) {
+    @GetMapping("/{id_producto}/{id_cliente}")
+    public ResponseEntity<Producto> getProductoById(@PathVariable Integer id_producto, @PathVariable Integer id_cliente) {
         try {
-            Producto producto = productoService.getProductoById(id);
+            Producto producto = productoService.getProductoById(id_producto, id_cliente);
             return ResponseEntity.ok(producto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -129,10 +129,10 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/getByCategoria/{categoria}")
-    public ResponseEntity<List<Producto>> getByCategoria(@PathVariable String categoria){
+    @GetMapping("/getByCategoria/{categoria}/{id_cliente}")
+    public ResponseEntity<List<Producto>> getByCategoria(@PathVariable String categoria, @PathVariable Integer id_cliente){
         try {
-            List<Producto> p = productoService.getProductosPorCategoria(categoria);
+            List<Producto> p = productoService.getProductosPorCategoria(id_cliente, categoria);
             if (p == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(null);

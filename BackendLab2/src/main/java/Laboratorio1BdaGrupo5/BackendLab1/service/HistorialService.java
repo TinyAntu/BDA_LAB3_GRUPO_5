@@ -1,9 +1,6 @@
 package Laboratorio1BdaGrupo5.BackendLab1.service;
 
-import Laboratorio1BdaGrupo5.BackendLab1.models.DetalleOrden;
-import Laboratorio1BdaGrupo5.BackendLab1.models.Historial;
-import Laboratorio1BdaGrupo5.BackendLab1.models.Orden;
-import Laboratorio1BdaGrupo5.BackendLab1.models.Producto;
+import Laboratorio1BdaGrupo5.BackendLab1.models.*;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.DetalleOrdenRepository;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.HistorialRepository;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.OrdenRepository;
@@ -74,6 +71,19 @@ public class HistorialService {
         historialRepository.save(historial);
 
         return historial;
+
+    }
+    public Historial addInteraccion(Integer id_cliente, Interaccion interaccion){
+        if(getHistorialByUsuario(id_cliente) == null){
+            InitiateHistorial(id_cliente);
+        }
+        try{
+            Historial historial = getHistorialByUsuario(id_cliente);
+            historial.getInteracciones().add(interaccion);
+            return historialRepository.save(historial);
+        } catch (Exception e){
+            throw new RuntimeException("Error al agregar la interaccion");
+        }
 
     }
 

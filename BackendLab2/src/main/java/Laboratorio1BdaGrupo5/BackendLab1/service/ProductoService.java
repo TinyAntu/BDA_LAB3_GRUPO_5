@@ -1,8 +1,6 @@
 package Laboratorio1BdaGrupo5.BackendLab1.service;
 
-import Laboratorio1BdaGrupo5.BackendLab1.models.Categoria;
-import Laboratorio1BdaGrupo5.BackendLab1.models.PriceHistory;
-import Laboratorio1BdaGrupo5.BackendLab1.models.Producto;
+import Laboratorio1BdaGrupo5.BackendLab1.models.*;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.ProductoRepository;
 import Laboratorio1BdaGrupo5.BackendLab1.repository.ProductoRepositoryImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +23,17 @@ public class ProductoService {
     private ProductoRepositoryImp productoRepository;
 
     @Autowired CategoriaService categoriaService;
+    @Autowired
+    HistorialService historialService;
 
 
-    public List<Producto> getAllProductos(int limit, int offset, String search) {
+    public List<Producto> getAllProductos(Integer id_cliente ,int limit, int offset, String search) {
         try {
-            System.out.println("Hola mundo");
             if (search.isEmpty()) {
                 return productoRepository.getProductos(limit, offset);
             } else {
+                Interaccion interaccion = new Interaccion("Busqueda", "Contenido: " + search);
+                historialService.addInteraccion(id_cliente, interaccion);
                 return productoRepository.getProductosSearch(limit, offset, search);
             }
         } catch (Exception e) {
@@ -36,9 +41,13 @@ public class ProductoService {
         }
     }
 
-    public Producto getProductoById(Integer idProducto) {
+    public Producto getProductoById(Integer idProducto, Integer id_cliente) {
         try {
             Producto producto = productoRepository.getProductoById(idProducto);
+            if(id_cliente != null){ // La id = null es para consultas del sistema
+                Interaccion interaccion = new Interaccion("Visita del producto", "Producto:" + producto.toString());
+                historialService.addInteraccion(id_cliente, interaccion);
+            }
             if (producto != null) {
                 return producto;
             } else {
@@ -57,8 +66,10 @@ public class ProductoService {
         }
     }
 
-    public List<Producto> getProductosPorCategoria(String nombre){
+    public List<Producto> getProductosPorCategoria(Integer id_cliente, String nombre){
         try {
+            Interaccion interaccion = new Interaccion("Filtro por categoría", "Categoría: " + nombre);
+            historialService.addInteraccion(id_cliente, interaccion);
             return productoRepository.getProductosPorCategoria(nombre);
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener productos por categoria", e);
@@ -75,7 +86,7 @@ public class ProductoService {
 
     public void updateProducto(Producto producto) {
         try {
-            getProductoById(producto.getIdProducto());
+            getProductoById(producto.getIdProducto(), null);
             productoRepository.updateProducto(producto);
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el producto", e);
@@ -84,7 +95,7 @@ public class ProductoService {
 
     public void deleteProducto(Integer idProducto) {
         try {
-            getProductoById(idProducto);
+            getProductoById(idProducto, null);
             productoRepository.deleteProducto(idProducto);
         } catch (Exception e) {
             throw new RuntimeException("Error al eliminar el producto", e);

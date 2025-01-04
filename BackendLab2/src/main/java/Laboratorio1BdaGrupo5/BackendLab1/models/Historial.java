@@ -14,21 +14,19 @@ import java.util.List;
 @Document(collection = "History")
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Historial {
     @Id
     private ObjectId id_Historial;
 
     private Integer idUsuario;
     private List<Producto> productos;
-    //Orden tiene los estados no tendria sentido guardarlos aparte
     private List<Orden> ordenes;
+    private List<Interaccion> interacciones;
 
-    public Historial(Integer id_Usuario) {
-        this.idUsuario = id_Usuario;
-        this.productos = new ArrayList<>(); // Lista vacía de productos
-        this.ordenes = new ArrayList<>(); // Lista vacía de órdenes
+    public Historial(Integer idUsuario) {
+        this.idUsuario = idUsuario;
+        this.productos = new ArrayList<>();
+        this.ordenes = new ArrayList<>();
+        this.interacciones = new ArrayList<>();
     }
-
 }
-

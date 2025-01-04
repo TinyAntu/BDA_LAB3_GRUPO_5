@@ -93,7 +93,6 @@ public class OrdenController {
 
     @PostMapping("/pagar")
     public ResponseEntity<String> pagar(@RequestBody OrdenPagoRequest request) {
-        System.out.println(request.getOrden().getId_cliente());
         try {
             ordenService.pagar(request.getDetalles(), request.getOrden());
             return ResponseEntity.ok("Orden pagada");
