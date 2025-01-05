@@ -85,7 +85,7 @@ public class OrdenService {
         try{
             double total = 0;
             for (DetalleOrden detalle : detalles) {
-                Producto p = productoService.getProductoById(detalle.getIdProducto(), -1);
+                Producto p = productoService.getProductoById(detalle.getIdProducto(), null);
                 detalle.setPrecioUnitario(BigDecimal.valueOf(p.getPrecio()));
                 total += p.getPrecio() * detalle.getCantidad();
             }
