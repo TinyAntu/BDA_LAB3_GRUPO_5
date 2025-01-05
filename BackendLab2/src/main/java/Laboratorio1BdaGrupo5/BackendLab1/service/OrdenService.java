@@ -81,7 +81,7 @@ public class OrdenService {
         }
     }
 
-    public void pagar(List<DetalleOrden> detalles, Orden orden) {
+    public Integer pagar(List<DetalleOrden> detalles, Orden orden) {
         try{
             double total = 0;
             for (DetalleOrden detalle : detalles) {
@@ -97,6 +97,7 @@ public class OrdenService {
             }
             Interaccion interaccion = new Interaccion("Pago", "Orden:" + orden.toString());
             historialService.addInteraccion(orden.getId_cliente(), interaccion);
+            return orden.getId_orden();
         } catch (Exception e){
             throw new RuntimeException("Error al pagar la orden", e);
         }

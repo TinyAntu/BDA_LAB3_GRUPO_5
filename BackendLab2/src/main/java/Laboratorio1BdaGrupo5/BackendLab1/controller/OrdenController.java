@@ -92,15 +92,19 @@ public class OrdenController {
     }
 
     @PostMapping("/pagar")
-    public ResponseEntity<String> pagar(@RequestBody OrdenPagoRequest request) {
+    public ResponseEntity<Integer> pagar(@RequestBody OrdenPagoRequest request) {
+        System.out.println("ID del cliente: " + request.getOrden().getId_cliente());
         try {
-            ordenService.pagar(request.getDetalles(), request.getOrden());
-            return ResponseEntity.ok("Orden pagada");
+            Integer idOrden = ordenService.pagar(request.getDetalles(), request.getOrden());
+            return ResponseEntity.ok(idOrden);
         } catch (Exception e) {
+            System.err.println("Error al procesar el pago: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error al pagar la orden: " + e.getMessage());
+                    .body(-1);
         }
     }
+
 
     @GetMapping("/filtrarOrdenesPorAlmacen/{almacenId}")
     public ResponseEntity<List<Orden>> getOrdenesByRadius(@PathVariable Integer almacenId) {

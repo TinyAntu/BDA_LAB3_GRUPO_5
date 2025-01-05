@@ -49,7 +49,7 @@ methods: {
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("userName", response.data.name);
       localStorage.setItem("isAdmin", response.data.name === "Admin");
-      
+      axios.post(`http://localhost:8090/api/History/initiate/${localStorage.getItem("userId")}`);
       // Redirigir al usuario a la página principal o dashboard
       this.$router.push('/');
 

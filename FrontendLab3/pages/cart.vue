@@ -64,10 +64,18 @@ const checkout = async () => {
     };
 
     // Realizar la solicitud al backend
-    await axios.post(`${API_URL}/orden/pagar`, ordenPagoRequest);
+    const response = await axios.post(`${API_URL}/orden/pagar`, ordenPagoRequest);
 
-    clearCart(); // Vacía el carrito tras el éxito
-    alert('Orden enviada exitosamente.');
+    const idOrden = response.data;
+    console.log(idOrden);
+
+    if(idOrden && idOrden > 0){
+      clearCart(); // Vacía el carrito tras el éxito
+      await axios.post(`${API_URL}/History/aggregate/${localStorage.getItem("userId")}/${idOrden}`);
+      alert('Orden enviada exitosamente.');
+    } else {
+      throw new Error('El backend devolvió un error al procesar la orden.');
+    }
   } catch (error) {
     console.error('Error al enviar la orden:', error);
     alert('Hubo un problema al procesar tu orden.');
