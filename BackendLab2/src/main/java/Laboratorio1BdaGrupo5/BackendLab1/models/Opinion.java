@@ -21,7 +21,7 @@ public class Opinion {
     private ObjectId id_opinion;
     //Quitar el comentario cuando se haya traspasado el producto a mongo (para tener la ObjetId)
     //@DBRef
-    private Producto productId;
+    private Integer productId;
 
     private String comentario;
 

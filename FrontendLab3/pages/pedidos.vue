@@ -114,7 +114,6 @@ const API_URL_4 = 'http://localhost:8090/api/review'; // URL del backend de Valo
 const rating = ref(0); // Calificación del producto
 const comment = ref(''); // Comentario del producto
 const productReview = ref(''); // Producto a valorar
-const fecha_compra = ref(''); // Fecha de la valoración
 
 // Estado del modal
 const isModalOpen = ref(false);
@@ -172,13 +171,6 @@ const sendReview = async () => {
   const idProducto = orderDetails.value.find((detail) => detail.nombre === productReview.value).idProducto;
   const fecha = new Date();
 
-  console.log('idCliente:', idCliente);
-  console.log('idProducto:', idProducto);
-  console.log('fecha:', fecha);
-  console.log('rating:', rating.value);
-  console.log('comment:', comment.value);
-  /* Por probar, los logs funcionan, esto deberia ser rapido
-  pero falta agregar los controllers al authenticate, hago una pausa momentanea
   try {
     await axios.post(`${API_URL_4}/create`,   {
       productId: idProducto,
@@ -193,7 +185,6 @@ const sendReview = async () => {
     console.error('Error sending review:', error);
     alert('Error al enviar la valoración');
   }
-  */
 };
 
 
