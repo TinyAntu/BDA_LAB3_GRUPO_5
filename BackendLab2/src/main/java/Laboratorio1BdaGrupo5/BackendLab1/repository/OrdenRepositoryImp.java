@@ -33,7 +33,7 @@ public class OrdenRepositoryImp implements OrdenRepository {
 
     @Override
     public List<Orden> getOrdenesById(int limit, int offset, int idCliente) {
-        String queryText = "SELECT id_orden AS idOrden, fecha_orden AS fechaOrden, estado, id_cliente AS idCliente, total " +
+        String queryText = "SELECT id_orden, fecha_orden, estado, id_cliente, total " +
                 "FROM orden " +
                 "WHERE id_cliente = :idCliente " +
                 "LIMIT :limit OFFSET :offset";
@@ -160,7 +160,7 @@ public class OrdenRepositoryImp implements OrdenRepository {
     }
     @Override
     public List<Orden> getFueraDe100km(String nombreAlmacenPrincipal){
-        String query = "SELECT id_orden as idOrden, fecha_orden as fechaOrden, estado as estado, id_cliente as idCliente, total as total " +
+        String query = "SELECT id_orden, fecha_orden, estado, id_cliente, total " +
                 "FROM pedidos_fuera_radio_100km(:nombreAlmacenPrincipal)";
         try {
             return sql2o.open()
