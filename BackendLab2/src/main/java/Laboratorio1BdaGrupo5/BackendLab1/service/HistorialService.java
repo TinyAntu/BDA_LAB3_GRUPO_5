@@ -8,6 +8,9 @@ import Laboratorio1BdaGrupo5.BackendLab1.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Criteria;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,19 @@ public class HistorialService {
     private DetalleOrdenRepository detalleOrdenRepository;
 
     public Historial InitiateHistorial(Integer id_Cliente){
+        // Verificar si ya existe un historial con el id_Cliente
+        Query query = new Query();
+        query.addCriteria(Criteria.where("idUsuario").is(id_Cliente));
+
+        Historial existingHistorial = mongoTemplate.findOne(query, Historial.class);
+
+        // Si ya existe, simplemente lo retornamos
+        if (existingHistorial != null) {
+            return existingHistorial;
+        }
+
+        // Si no existe, creamos uno nuevo
+
         Historial historial = new Historial(id_Cliente);
 
         // Guardar en MongoDB
@@ -61,11 +77,35 @@ public class HistorialService {
 
         Historial historial = getHistorialByUsuario(idUsuario);
 
+        boolean ordenYaAgregada = false;
+        for (Orden o : historial.getOrdenes()) {
+            if (o.getId_orden() != null && o.getId_orden().intValue() == id_Orden) {
+                ordenYaAgregada = true;
+                break;
+            }
+        }
+
         // Agregar la orden al historial
-        historial.getOrdenes().add(orden);
+        if (!ordenYaAgregada) {
+            // Agregar la orden al historial
+            historial.getOrdenes().add(orden);
+        }
 
         // Agregar los productos al historial
-        historial.getProductos().addAll(productos);
+        // Verificar y agregar solo los productos que no estén ya en el historial
+        for (Producto producto : productos) {
+            boolean productoYaAgregado = false;
+            for (Producto p : historial.getProductos()) {
+                if (p.getIdProducto() != null && p.getIdProducto().intValue() == producto.getIdProducto()) {
+                    productoYaAgregado = true;
+                    break;
+                }
+            }
+
+            if (!productoYaAgregado) {
+                historial.getProductos().add(producto);
+            }
+        }
 
         //Actulizar el registro dentro de mongoDB
         historialRepository.save(historial);
@@ -73,6 +113,7 @@ public class HistorialService {
         return historial;
 
     }
+
     public Historial addInteraccion(Integer id_cliente, Interaccion interaccion){
         if(getHistorialByUsuario(id_cliente) == null){
             InitiateHistorial(id_cliente);
