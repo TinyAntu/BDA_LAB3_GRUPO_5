@@ -32,9 +32,17 @@
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <div v-for="product in products" :key="product.idProducto" class="border border-gray-300 rounded-lg shadow-md p-4 flex flex-col justify-between h-60">
         
+        <div class="flex flex-row justify-between">
           <h2 class="text-xl font-semibold mb-2">{{ product.nombre }}</h2>
-          <p class="text-gray-600 mb-2 truncate overflow-hidden">{{ product.descripcion }}</p>
-        
+          <button @click="() => {
+            openReviewsModal(product);
+          }" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Ver Reseñas
+          </button>
+        </div>
+        <p class="text-gray-600 mb-2 truncate overflow-hidden">{{ product.descripcion }}</p>
+      
         <div class="flex justify-between items-center mb-4">
           <span class="text-xl font-bold">${{ product.precio }}</span>
           <span :class="['font-medium', getStockColorClass(product.stock)]">
@@ -68,6 +76,27 @@
         {{ feedBackMessage }}
       </div>
     </div>
+    <!-- Modal con las reseñas del producto -->
+    <div v-if="isReviewsModalOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+      <div class="bg-white p-6 rounded-lg w-3/4">
+        <h2 class="text-xl font-semibold mb-4">Reseñas de {{ selectedProduct.nombre }}</h2>
+        <hr class="border-gray-300 mb-4">
+        <div v-if="reviews && reviews.length > 0" class="max-h-96 overflow-y-auto">
+          <div v-for="(review, index) in reviews" :key="index" class="mb-4 border-b pb-2 flex flex-row mt-3">
+            <p class=""><strong>Usuario:</strong> {{ review.id_usuario }}</p>
+            <p class="absolute left-[21%]"><strong>Calificación:</strong><span v-html="getStars(review.puntuacion)"></span></p>
+            <p class="absolute left-[34%]"><strong>Comentario:</strong> {{ review.comentario }}</p>
+            <p class="absolute right-[16%]"><strong>Fecha:</strong> {{ formatDate(review.fecha) }}</p>
+          </div>
+        </div>
+        <div v-else>
+          <p>No se encontraron reseñas para este producto.</p>
+        </div>
+        <button @click="closeReviewsModal" class="bg-red-500 text-white px-4 py-2 rounded mt-4">
+          Cerrar
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -88,6 +117,9 @@ const searchQuery = ref("");
 const selectedCategory = ref(""); // Categoría seleccionada
 const API_URL = "http://localhost:8090/api";
 const { addToCart, cartItems } = useCart();
+const selectedProduct = ref(null);
+const reviews = ref([]);
+const isReviewsModalOpen = ref(false);
 
 const fetchProducts = async () => {
   const limit = 8; // Número de productos por página
@@ -137,7 +169,24 @@ const filterByCategory = async () => {
   }
 };
 
+const fetchReviews = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/review/product/${selectedProduct.value.idProducto}`);
+    reviews.value = response.data;
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+  }
+};
 
+const openReviewsModal = (product) => {
+  selectedProduct.value = product;
+  fetchReviews();
+  isReviewsModalOpen.value = true;
+};
+
+const closeReviewsModal = () => {
+  isReviewsModalOpen.value = false;
+};
 
 const searchProducts = () => {
   currentPage.value = 1;
@@ -167,6 +216,23 @@ const syncStockWithCart = () => {
       product.stock -= cartItem.quantity;
     }
   });
+};
+
+// Formatear la fecha en el formato deseado
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
+const getStars = (rating) => {
+  const fullStar = '★';
+  const emptyStar = '☆';
+  return fullStar.repeat(rating) + emptyStar.repeat(5 - rating);
 };
 
 watch(currentPage, fetchProducts);

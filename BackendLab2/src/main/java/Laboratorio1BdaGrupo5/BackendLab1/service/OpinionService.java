@@ -27,7 +27,7 @@ public class OpinionService {
         return opinionRepository.save(review);
     }
 
-    public List<Opinion> getReviewsByProductId(Producto productId) {
+    public List<Opinion> getReviewsByProductId(Integer productId) {
         return opinionRepository.findByProductId(productId);
     }
 

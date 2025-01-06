@@ -9,6 +9,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface OpinionRepository extends MongoRepository<Opinion, ObjectId> {
-    List<Opinion> findByProductId(Producto productId);
+    List<Opinion> findByProductId(Integer productId);
     List<Opinion> findByProductIdOrderByFechaDesc(ObjectId productId, Sort sort);
 }

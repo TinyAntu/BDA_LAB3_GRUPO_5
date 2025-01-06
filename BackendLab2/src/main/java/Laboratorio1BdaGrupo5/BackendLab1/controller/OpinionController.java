@@ -24,7 +24,7 @@ public class OpinionController {
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Opinion>> getReviewsByProduct(@PathVariable Producto productId) {
+    public ResponseEntity<List<Opinion>> getReviewsByProduct(@PathVariable Integer productId) {
         return ResponseEntity.ok(opinionService.getReviewsByProductId(productId));
     }
 
