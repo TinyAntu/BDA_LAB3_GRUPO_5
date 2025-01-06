@@ -36,8 +36,8 @@
           <h2 class="text-xl font-semibold mb-2">{{ product.nombre }}</h2>
           <button @click="() => {
             openReviewsModal(product);
-          }" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 flex items-center">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          }" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 ease-in-out flex items-center text-xs md:text-sm lg:text-base">
+            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             Ver Reseñas
           </button>
         </div>
@@ -82,11 +82,11 @@
         <h2 class="text-xl font-semibold mb-4">Reseñas de {{ selectedProduct.nombre }}</h2>
         <hr class="border-gray-300 mb-4">
         <div v-if="reviews && reviews.length > 0" class="max-h-96 overflow-y-auto">
-          <div v-for="(review, index) in reviews" :key="index" class="mb-4 border-b pb-2 flex flex-row mt-3">
-            <p class=""><strong>Usuario:</strong> {{ review.id_usuario }}</p>
-            <p class="absolute left-[21%]"><strong>Calificación:</strong><span v-html="getStars(review.puntuacion)"></span></p>
-            <p class="absolute left-[34%]"><strong>Comentario:</strong> {{ review.comentario }}</p>
-            <p class="absolute right-[16%]"><strong>Fecha:</strong> {{ formatDate(review.fecha) }}</p>
+          <div v-for="(review, index) in reviews" :key="index" class="mb-4 border-b pb-2 flex flex-row mt-3 justify-between">
+            <p><strong>Usuario:</strong> {{ review.id_usuario }}</p>
+            <p><strong>Calificación:</strong><span v-html="getStars(review.puntuacion)"></span></p>
+            <p><strong>Comentario:</strong> {{ review.comentario }}</p>
+            <p><strong>Fecha:</strong> {{ formatDate(review.fecha) }}</p>
           </div>
         </div>
         <div v-else>

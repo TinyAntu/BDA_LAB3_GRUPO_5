@@ -73,7 +73,7 @@
     <div v-if="isModalOpenReview" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-[60]">
       <div class="bg-white p-6 rounded-lg w-3/4">
         <div class= "flex flex-row justify-between">
-        <h2 class="text-xl font-semibold mb-2 pt-3 ml-2">Valorar Producto: {{ productReview }}</h2>
+          <h2 class="text-xl font-semibold mb-2 pt-3 ml-2">Valorar Producto: {{ productReview }}</h2>
           <div class="flex items-center mb-2 mr-6 pb-3">
             <p class="mr-2"><strong>Calificación:</strong></p>
             <v-rating v-model="rating" :max="5" />
