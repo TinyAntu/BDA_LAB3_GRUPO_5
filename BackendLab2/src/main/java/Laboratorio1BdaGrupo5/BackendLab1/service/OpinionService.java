@@ -22,7 +22,7 @@ public class OpinionService {
 
 
     public Opinion saveReview(Opinion review) {
-        Interaccion interaccion = new Interaccion("Review", "Contenido: " + review.toString());
+        Interaccion interaccion = new Interaccion("Review", "Contenido: " + review.getComentario() + ", Puntuación: " + review.getPuntuacion());
         historialService.addInteraccion(review.getId_usuario(), interaccion);
         return opinionRepository.save(review);
     }
