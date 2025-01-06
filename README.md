@@ -40,7 +40,7 @@ Una vez descargado/clonado el repositorio siga los siguientes pasos:
 
     -PASSWORD=La contraseña con la que instalo postgres
 
-8.- Ahora corra el archivo BackendLab2Application presionando el boton de play
+8.- Ahora corra el archivo BackendLab3Application presionando el boton de play
 
 9.- Luego dentro de Visual Studio Code abra "FrontEndLab3"
 
