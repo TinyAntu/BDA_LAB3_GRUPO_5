@@ -24,6 +24,9 @@
               <v-btn text href="/perfil">Mi Cuenta</v-btn>
             </v-list-item>
             <v-list-item>
+              <v-btn text href="/historial">Mi Historial</v-btn>
+            </v-list-item>
+            <v-list-item>
               <v-btn text @click="logout">Cerrar Sesión</v-btn>
             </v-list-item>
           </template>
